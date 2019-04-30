@@ -11,18 +11,19 @@ import click
 # file ext
 
 @click.command()
-@click.option('--filepath', help='Video/Image file.')
-@click.option('--width', default=800, help='Width of the output file')
-@click.option('--output', default='output', help='Output File')
+@click.argument('filepath', required=True)
+@click.option('--out', help='Output file name. If not extension, defaults to --extension or JPEG if no extension is given.', default='output', required=False)
+@click.option('--width', default=800, help='Width of the output file.')
 # @click.option('--height', )
 # @click.option('--extension')
-def main(filepath, width, output):
-    click.echo("""
-    Average color for specified frames and returns a representation of the data. 
-    """)
-    average = AverageFrameColor(filepath, width, output)
+def main(filepath, width, out):
+    average = AverageFrameColor(filepath, width, out)
+    
 
 class AverageFrameColor:
+    """
+        Average color for specified frames and returns a representation of the data. 
+    """
     def __init__(self, filepath, width, output):
         self.filepath = filepath
         self.width = width
