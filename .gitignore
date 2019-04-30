@@ -124,6 +124,7 @@ dmypy.json
 
 # Specific
 *.mkv
+*.mp4
 *.jpeg
 /output
 *.ipynb

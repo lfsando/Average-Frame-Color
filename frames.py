@@ -26,7 +26,7 @@ image_exts = [
 @click.option('--width', help='Width of the output file. If none provided the width of the image will be half the amount of frames calculated')
 @click.option('--extension', help='Output file extension.', required=False)
 @click.option('--show', default=True, help='Show image after processing.', required=False)
-def main(filepath, width, output, extension, show):
+def main(filepath: str, width: int, output: str, extension: str, show: bool) -> None:
     average = AverageFrameColor(filepath, width, output, extension, show)
     average.check_arguments()
 
@@ -40,7 +40,7 @@ class AverageFrameColor:
     """
         Average color for specified frames, returns a representation of the data as a image. 
     """
-    def __init__(self, filepath, width, output, extension, show):
+    def __init__(self, filepath: str, width: int, output: str, extension: str, show: bool) -> None:
         self.filepath = filepath
         self.width = width
         self.output = output
@@ -53,7 +53,7 @@ class AverageFrameColor:
         self.show = show
 
     
-    def check_arguments(self):
+    def check_arguments(self) -> None:
         # check if file exists
         exists = os.path.exists(self.filepath)
         if not exists:
@@ -114,7 +114,7 @@ class AverageFrameColor:
             os.makedirs(outdir)        
         self.output = os.path.join(outpath)
 
-    def image_average(self):
+    def image_average(self) -> None:
         im = Image.open(self.filepath)
         im_data = np.array(im)
         average_color = self.frame_average(im_data)
@@ -134,7 +134,7 @@ class AverageFrameColor:
             output.show()
         click.echo('Average Color: ' + ' '.join(str(c) for c in average_color))
 
-    def video_average(self):
+    def video_average(self) -> None:
         video = cv2.VideoCapture(self.filepath)
         framerate = round(video.get(cv2.CAP_PROP_FPS)) * self.seconds_ratio
         
@@ -152,9 +152,13 @@ class AverageFrameColor:
                 if input('Cancelling... Wish to save what you got so far?\n').lower() in ['yes', 'y']:
                     break
                 sys.exit()
-                
-            # except TypeError as e:
-                
+            except AttributeError as e:
+                print('Attribute Error:', e)
+                break
+            except Exception as e:
+                print(e)
+                break
+
             i += 1
         
         n_frames = len(colors)
@@ -169,19 +173,19 @@ class AverageFrameColor:
         output.show()
     
     @staticmethod
-    def frame_average(frame):
+    def frame_average(frame: np.array) -> np.array:
         n_pixels = frame.shape[0] * frame.shape[1]
-        colors = [
+        color_sum = (
             frame[:, :, 0].sum(),
             frame[:, :, 1].sum(),
             frame[:, :, 2].sum()
-            ]
-        colors = np.array(colors)
-        average_color = np.round(colors / n_pixels).astype(int)
+        )
+        average = np.array(color_sum)
+        average_color = np.round(average / n_pixels).astype(int)
         return average_color
 
     @staticmethod
-    def save_output(data, output_path, format):
+    def save_output(data: np.array, output_path: str, format: str):
         im = Image.fromarray(data.astype('uint8'))
         im.save(output_path, format)
         return im
