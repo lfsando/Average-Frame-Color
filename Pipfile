@@ -9,7 +9,7 @@ verify_ssl = true
 opencv-python = "*"
 pillow = "*"
 numpy = "*"
-matplotlib = "*"
+click = "*"
 
 [requires]
 python_version = "3.7"
