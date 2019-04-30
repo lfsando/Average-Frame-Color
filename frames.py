@@ -125,9 +125,9 @@ class AverageFrameColor:
             output_data.append([average_color] * self.width)
         
         output_data = np.array(output_data)
-        output = self.save_output(output_data, self.output, self.extension.upper())
         
         if self.show:
+            output = self.save_output(output_data, self.output, self.extension.upper())
             output.show()
         click.echo('Average Color: ' + ' '.join(str(c) for c in average_color))
 
