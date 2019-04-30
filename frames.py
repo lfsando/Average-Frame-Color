@@ -23,7 +23,7 @@ image_exts = [
 @click.command()
 @click.argument('filepath', required=True)
 @click.option('--output', help='Output file name or relative path. If not extension, defaults to --extension or JPEG if no extension is given.', required=False)
-@click.option('--width', default=800, help='Width of the output file.')
+@click.option('--width', help='Width of the output file. If none provided the width of the image will be half the amount of frames calculated')
 @click.option('--extension', help='Output file extension.', required=False)
 @click.option('--show', default=True, help='Show image after processing.', required=False)
 def main(filepath, width, output, extension, show):
@@ -102,9 +102,10 @@ class AverageFrameColor:
             sys.exit(-1)
 
         # Check width
-        if self.width < 1:
-            click.echo('Error: Output width must be 1 or more pixels.')
-            sys.exit(-1)
+        if self.width:
+            if self.width < 1:
+                click.echo('Error: Output width must be 1 or more pixels.')
+                sys.exit(-1)
 
         # check ifoutput directory exists else create one
         outdir = os.path.dirname(outpath)
@@ -120,6 +121,8 @@ class AverageFrameColor:
 
 
         output_data = []
+        if not self.width:
+            self.width = 500
 
         for i in range(self.width):
             output_data.append([average_color] * self.width)
@@ -156,6 +159,9 @@ class AverageFrameColor:
         
         n_frames = len(colors)
         frames = []
+        if not self.width:
+            self.width = n_frames // 2
+
         for color in colors:
             frames.append([color]*self.width)
         frames = np.array(frames).reshape(n_frames, self.width, 3)
