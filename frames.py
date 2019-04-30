@@ -2,14 +2,9 @@ import os
 import cv2
 import numpy as np
 from PIL import Image
+import sys
 
 import click
-
-# input ( video  ) if image returns color average of image
-# output otherwise output
-# width
-# if height, must choose between cutting the video and/or specify frame capture time (every 2s), otherwise image will be gigantic if every frame and will take a long time
-# file ext
 
 video_exts = [
     'avi',
@@ -43,7 +38,7 @@ def main(filepath, width, output, extension, show):
 
 class AverageFrameColor:
     """
-        Average color for specified frames, returns a representation of the data. 
+        Average color for specified frames, returns a representation of the data as a image. 
     """
     def __init__(self, filepath, width, output, extension, show):
         self.filepath = filepath
