@@ -20,27 +20,11 @@ image_exts = [
 ]
 
 
-@click.command()
-@click.argument('filepath', required=True)
-@click.option('--output', help='Output file name or relative path. If not extension, defaults to --extension or JPEG if no extension is given.', required=False)
-@click.option('--width', help='Width of the output file. If none provided the width of the image will be half the amount of frames calculated')
-@click.option('--extension', help='Output file extension.', required=False)
-@click.option('--show', default=True, help='Show image after processing.', required=False)
-def main(filepath: str, width: int, output: str, extension: str, show: bool) -> None:
-    average = AverageFrameColor(filepath, width, output, extension, show)
-    average.check_arguments()
-
-    if average.is_video:
-        average.video_average()
-    else:
-        average.image_average()
-    
-
 class AverageFrameColor:
     """
         Average color for specified frames, returns a representation of the data as a image. 
     """
-    def __init__(self, filepath: str, width: int, output: str, extension: str, show: bool) -> None:
+    def __init__(self, filepath: str, width: int, output: str, extension: str, show: bool, seconds_ratio) -> None:
         self.filepath = filepath
         self.width = width
         self.output = output
@@ -48,7 +32,7 @@ class AverageFrameColor:
         self.is_video = False
 
         # every n seconds get a frame
-        self.seconds_ratio = 2
+        self.seconds_ratio = seconds_ratio
 
         self.show = show
 
@@ -149,9 +133,9 @@ class AverageFrameColor:
                     colors.append(self.frame_average(frame))
                 
             except KeyboardInterrupt:
-                if input('Cancelling... Wish to save what you got so far?\n').lower() in ['yes', 'y']:
-                    break
-                sys.exit()
+                if input('Cancelling... Wish to save what you got so far?\n').lower() in ['no', 'n']:
+                    sys.exit()
+                break
             except AttributeError as e:
                 print('Attribute Error:', e)
                 break
@@ -190,6 +174,23 @@ class AverageFrameColor:
         im.save(output_path, format)
         return im
 
+
+@click.command()
+@click.argument('filepath', required=True)
+@click.option('--output', help='Output file name or relative path. If not extension, defaults to --extension or JPEG if no extension is given.', required=False)
+@click.option('--width', help='Width of the output file. If none provided the width of the image will be half the amount of frames calculated')
+@click.option('--extension', help='Output file extension.', required=False)
+@click.option('--ratio', help='Get a frame every n seconds. Default=1.0', default=1.0, required=False)
+@click.option('--show', default=True, help='Show image after processing.', required=False)
+def main(filepath: str, width: int, output: str, extension: str, show: bool, ratio) -> None:
+    average = AverageFrameColor(filepath, width, output, extension, show, ratio)
+    average.check_arguments()
+
+    if average.is_video:
+        average.video_average()
+    else:
+        average.image_average()
+    
 
 if __name__ == '__main__':
     main()
