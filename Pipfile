@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 opencv-python = "*"
-pillow = "*"
+pillow = ">=6.2.0"
 numpy = "*"
 click = "*"
 
