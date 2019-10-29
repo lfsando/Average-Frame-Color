@@ -178,9 +178,9 @@ class AverageFrameColor:
 @click.command()
 @click.argument('filepath', required=True)
 @click.option('--output', help='Output file name or relative path. If not extension, defaults to --extension or JPEG if no extension is given.', required=False)
-@click.option('--width', help='Width of the output file. If none provided the width of the image will be half the amount of frames calculated')
+@click.option('--width', help='Width of the output file. If none provided the width of the image will be half the amount of frames calculated', type=int)
 @click.option('--extension', help='Output file extension.', required=False)
-@click.option('--ratio', help='Get a frame every n seconds. Default=1.0', default=1.0, required=False)
+@click.option('--ratio', help='Get a frame every n seconds. Default=1.0', default=1.0, required=False, type=float)
 @click.option('--show', default=True, help='Show image after processing.', required=False)
 def main(filepath: str, width: int, output: str, extension: str, show: bool, ratio) -> None:
     average = AverageFrameColor(filepath, width, output, extension, show, ratio)
