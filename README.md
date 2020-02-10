@@ -9,8 +9,8 @@ python ./frames.py --help
 >> Usage: frames.py [OPTIONS] FILEPATH
 
 >> Options:
->>   --output TEXT     Output file name or relative path. If not extension,
->>                     defaults to --extension or JPEG if no extension is given.
+>>   --output TEXT     Output file name or relative path. If file does not have extension,
+>>                     defaults to --extension or JPEG if no --extension is given.
 >>   --width INTEGER   Width of the output file. If none provided the width of
 >>                     the image will be half the amount of frames calculated
 >>   --extension TEXT  Output file extension.
