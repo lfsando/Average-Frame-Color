@@ -31,14 +31,14 @@ class AverageFrameColor:
     is_video: bool
     seconds_ratio: int
 
-    def __init__(self, filepath: str, width: int, output: str, extension: str, show: bool, seconds_ratio: int) -> None:
+    def __init__(self, filepath: str, width: int, output: str, extension: str, show: bool, every_n_seconds: int) -> None:
         self.filepath = filepath
         self.width = width
         self.output = output
         self.extension = extension
         self.is_video = False
         # every n seconds get a frame
-        self.seconds_ratio = seconds_ratio
+        self.every_n_seconds = every_n_seconds
         self.show = show
 
     def check_arguments(self) -> None:
@@ -122,8 +122,7 @@ class AverageFrameColor:
 
     def video_average(self) -> None:
         video = cv2.VideoCapture(self.filepath)
-        framerate = round(video.get(cv2.CAP_PROP_FPS)) * self.seconds_ratio
-
+        framerate = round(video.get(cv2.CAP_PROP_FPS)) * self.every_n_seconds
         colors = []
         i = 0
         ret = True
@@ -131,7 +130,7 @@ class AverageFrameColor:
             try:
                 ret, frame = video.read()
                 if i % framerate == 0:
-                    print("Frame:", i, "\tSeconds:", i / (framerate / self.seconds_ratio))
+                    print("Frame:", i, "\tSeconds:", i / (framerate/self.every_n_seconds))
                     colors.append(self.frame_average(frame))
 
             except KeyboardInterrupt:
