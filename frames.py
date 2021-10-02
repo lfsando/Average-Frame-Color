@@ -94,7 +94,7 @@ class AverageFrameColor:
                 click.echo('Error: Output width must be 1 or more pixels.')
                 sys.exit(-1)
 
-        # check ifoutput directory exists else create one
+        # check if output directory exists else create one
         outdir = os.path.dirname(outpath)
         if not os.path.exists(outdir):
             click.echo(f"Creating new directory at {outdir}")
@@ -196,7 +196,6 @@ def main(filepath: str, width: int, output: str, extension: str, show: bool, rat
         average.video_average()
     else:
         average.image_average()
-
 
 if __name__ == '__main__':
     main()
